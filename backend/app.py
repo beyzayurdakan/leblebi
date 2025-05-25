@@ -21,11 +21,13 @@ def clean_llm_output_full(raw_text: str) -> str:
 
     return  json.loads(unescape(text).strip())
 
-llm_model = VertexAI(
-    model_name="gemini-2.0-flash-001", 
-    temperature=0.2,
-    max_output_tokens=1024
-)
+def get_llm_model():
+    return VertexAI(
+        model_name="gemini-2.0-flash-001", 
+        temperature=0.2,
+        max_output_tokens=1024
+    )
+
 
 def ask(query: str, chat_history=None) -> tuple:
     """
@@ -48,24 +50,22 @@ def ask(query: str, chat_history=None) -> tuple:
         preprocess_prompt = preprocess_prompt.replace("{{chat_history}}", history_text)
     else:
         preprocess_prompt = preprocess_prompt.replace("{{chat_history}}", "No previous conversation.")
-    
-    # Get the preprocessed query that now includes context from chat history
-    preprocessed_query = clean_llm_output_full(llm_model.invoke(preprocess_prompt))
+
+    # LLM çağrısı (fonksiyon içinde oluşturulmuş VertexAI nesnesi ile)
+    preprocessed_query = clean_llm_output_full(get_llm_model().invoke(preprocess_prompt))
 
     print("\n--- PREPROCESSED QUERY ---\n")
     print(preprocessed_query)
     print("\n--- END OF PREPROCESSED QUERY ---\n")
 
     # Augment the query with relevant context from vector stores
-    # Still pass chat_history to include it in the answer generation prompt
-    # but the query itself is already the preprocessed one
     augmented_query = augment_prompt(preprocessed_query, chat_history)
 
     print("\n--- AUGMENTED PROMPT ---\n")
     print(augmented_query)
     print("\n--- END OF AUGMENTED PROMPT ---\n")
-    
-    response = clean_llm_output(llm_model.invoke(augmented_query))
-    
-    # Return both the response and the preprocessed query
+
+    # Final yanıtı üret
+    response = clean_llm_output(get_llm_model().invoke(augmented_query))
+
     return response.strip(), preprocessed_query
