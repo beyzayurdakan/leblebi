@@ -1,9 +1,13 @@
+from . import config
 from langchain_ollama import OllamaLLM
 from .rag_pipeline import augment_prompt, load_preprocess_prompt, format_chat_history
 from langchain_google_vertexai import VertexAI
 from html import unescape
 import re
 import json
+import os
+print("GOOGLE_APPLICATION_CREDENTIALS:", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+
 
 def clean_llm_output(output: str) -> str:
     output = re.sub(r"<br\s*/?>", "\n", output)
