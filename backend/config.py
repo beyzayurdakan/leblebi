@@ -5,11 +5,12 @@ import json
 
 load_dotenv()
 
-# Google kimlik bilgilerini geçici dosyaya yaz
-if "gcp_service_account" in st.secrets:
-    with open("gcp_key.json", "w") as f:
-        json.dump(dict(st.secrets["gcp_service_account"]), f)
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcp_key.json"
+key_path = "/tmp/gcp_key.json"
+
+with open(key_path, "w") as f:
+    json.dump(dict(st.secrets["gcp_service_account"]), f)
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = key_path
 
 
 os.environ["PINECONE_API_KEY"] = st.secrets["PINECONE_API_KEY"]
