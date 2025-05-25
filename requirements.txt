@@ -2,7 +2,7 @@ streamlit
 langchain
 langchain-ollama
 langchain-pinecone>=0.1.0
-pinecone-client>=3.0.0
+pinecone-client
 langchain-google-vertexai
 tqdm
 python-dotenv
@@ -10,3 +10,4 @@ beautifulsoup4
 requests
 urllib3
 selenium
+google-cloud-aiplatform
